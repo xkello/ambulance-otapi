@@ -1,0 +1,9 @@
+internal/hospital_wl/README.md
+internal/hospital_wl/api_hospital_employee_list.go
+internal/hospital_wl/api_hospital_roles.go
+internal/hospital_wl/api_hospitals.go
+internal/hospital_wl/model_employee_list_entry.go
+internal/hospital_wl/model_hospital.go
+internal/hospital_wl/model_role.go
+internal/hospital_wl/model_transfer_employee_list_entry_request.go
+internal/hospital_wl/routers.go

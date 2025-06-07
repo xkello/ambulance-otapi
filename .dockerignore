@@ -1,0 +1,5 @@
+internal/hospital_wl/api_*
+internal/hospital_wl/model_*
+internal/hospital_wl/routers.go
+build/
+deployments/

@@ -1,0 +1,723 @@
+openapi: 3.0.0
+servers:
+  - description: Cluster Endpoint
+    url: /api
+info:
+  description: Hospital Employee Administration for Web-In-Cloud system
+  version: "1.0.0"
+  title: Employee List Api
+  contact:
+    email: xbelake@stuba.sk
+  license:
+    name: CC BY 4.0
+    url: "https://creativecommons.org/licenses/by/4.0/"
+tags:
+  - name: employeeList
+    description: Employee List API
+  - name: hospitalRoles
+    description: Employee role in the hospital
+  - name: hospitals
+    description: Hospital details
+paths:
+  /employee-list/{hospitalId}/entries/{entryId}/performances:
+    get:
+      tags:
+        - hospitalEmployeeList
+      summary: Get all performance entries for an employee
+      operationId: getPerformanceEntries
+      description: Retrieves all performance entries for a specific employee.
+      parameters:
+        - in: path
+          name: hospitalId
+          required: true
+          schema:
+            type: string
+          description: The ID of the hospital
+        - in: path
+          name: entryId
+          required: true
+          schema:
+            type: string
+          description: The ID of the employee entry
+      responses:
+        "200":
+          description: List of performance entries for the employee
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PerformanceEntry"
+        "404":
+          description: Hospital or employee entry not found
+    post:
+      tags:
+        - hospitalEmployeeList
+      summary: Create a new performance entry for an employee
+      operationId: createPerformanceEntry
+      description: Creates a new performance entry for a specific employee.
+      parameters:
+        - in: path
+          name: hospitalId
+          required: true
+          schema:
+            type: string
+          description: The ID of the hospital
+        - in: path
+          name: entryId
+          required: true
+          schema:
+            type: string
+          description: The ID of the employee entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PerformanceEntry"
+      responses:
+        "200":
+          description: The created performance entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PerformanceEntry"
+        "400":
+          description: Invalid performance entry data
+        "404":
+          description: Hospital or employee entry not found
+
+  /employee-list/{hospitalId}/entries/{entryId}/performances/{performanceId}:
+    get:
+      tags:
+        - hospitalEmployeeList
+      summary: Get a specific performance entry
+      operationId: getPerformanceEntry
+      description: Retrieves a specific performance entry for an employee.
+      parameters:
+        - in: path
+          name: hospitalId
+          required: true
+          schema:
+            type: string
+          description: The ID of the hospital
+        - in: path
+          name: entryId
+          required: true
+          schema:
+            type: string
+          description: The ID of the employee entry
+        - in: path
+          name: performanceId
+          required: true
+          schema:
+            type: string
+          description: The ID of the performance entry
+      responses:
+        "200":
+          description: The requested performance entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PerformanceEntry"
+        "404":
+          description: Hospital, employee entry, or performance entry not found
+    put:
+      tags:
+        - hospitalEmployeeList
+      summary: Update a performance entry
+      operationId: updatePerformanceEntry
+      description: Updates a specific performance entry for an employee.
+      parameters:
+        - in: path
+          name: hospitalId
+          required: true
+          schema:
+            type: string
+          description: The ID of the hospital
+        - in: path
+          name: entryId
+          required: true
+          schema:
+            type: string
+          description: The ID of the employee entry
+        - in: path
+          name: performanceId
+          required: true
+          schema:
+            type: string
+          description: The ID of the performance entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PerformanceEntry"
+      responses:
+        "200":
+          description: The updated performance entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PerformanceEntry"
+        "400":
+          description: Invalid performance entry data
+        "404":
+          description: Hospital, employee entry, or performance entry not found
+    delete:
+      tags:
+        - hospitalEmployeeList
+      summary: Delete a performance entry
+      operationId: deletePerformanceEntry
+      description: Deletes a specific performance entry for an employee.
+      parameters:
+        - in: path
+          name: hospitalId
+          required: true
+          schema:
+            type: string
+          description: The ID of the hospital
+        - in: path
+          name: entryId
+          required: true
+          schema:
+            type: string
+          description: The ID of the employee entry
+        - in: path
+          name: performanceId
+          required: true
+          schema:
+            type: string
+          description: The ID of the performance entry
+      responses:
+        "204":
+          description: Performance entry deleted successfully
+        "404":
+          description: Hospital, employee entry, or performance entry not found
+
+  /employee-list/{hospitalId}/entries/{entryId}/transfer:
+    post:
+      tags:
+        - hospitalEmployeeList
+      summary: Transfer an employee entry to another hospital
+      operationId: transferEmployeeListEntry
+      description: Moves the given entry from the source hospital to the one specified in the request body.
+      parameters:
+        - in: path
+          name: hospitalId
+          required: true
+          schema:
+            type: string
+          description: The ID of the source hospital
+        - in: path
+          name: entryId
+          required: true
+          schema:
+            type: string
+          description: The ID of the employee entry to move
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - targetHospitalId
+              properties:
+                targetHospitalId:
+                  type: string
+                  description: The hospital to move this entry into
+              example:
+                targetHospitalId: hospital-nr
+      responses:
+        "200":
+          description: value of the employee list entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmployeeListEntry"
+              examples:
+                response:
+                  $ref: "#/components/examples/EmployeeListEntriesExample"
+        "400":
+          description: Missing or invalid targetHospitalId
+        "404":
+          description: Source hospital or entry not found
+  "/employee-list/{hospitalId}/entries":
+    post:
+      tags:
+        - hospitalEmployeeList
+      summary: Saves new entry into employee list
+      operationId: createEmployeeListEntry
+      description: Use this method to store new entry into the mployee list.
+      parameters:
+        - in: path
+          name: hospitalId
+          description: pass the id of the particular hospital
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeListEntry"
+            examples:
+              request-sample:
+                $ref: "#/components/examples/EmployeeListEntryExample"
+        description: Employee list entry to store
+        required: true
+      responses:
+        "200":
+          description: >-
+            List of employee in hospital
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeListEntry"
+              examples:
+                updated-response:
+                  $ref: "#/components/examples/EmployeeListEntryExample"
+        "400":
+          description: Missing mandatory properties of input object.
+        "404":
+          description: Hospital with such ID does not exists
+        "409":
+          description: Entry with the specified id already exists
+    get:
+      tags:
+        - hospitalEmployeeList
+      summary: Provides the hospital employee list
+      operationId: getEmployeeListEntries
+      description: By using hospitalId you get list of entries in hospital employee list
+      parameters:
+        - in: path
+          name: hospitalId
+          description: pass the id of the particular hospital
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: value of the employee list entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmployeeListEntry"
+              examples:
+                response:
+                  $ref: "#/components/examples/EmployeeListEntriesExample"
+        "404":
+          description: Hospital with such ID does not exist
+  "/employee-list/{hospitalId}/entries/{entryId}":
+    get:
+      tags:
+        - hospitalEmployeeList
+      summary: Provides details about employee list entry
+      operationId: getEmployeeListEntry
+      description: >-
+        By using hospitalId and entryId you can details of particular entry
+        item hospital.
+      parameters:
+        - in: path
+          name: hospitalId
+          description: pass the id of the particular hospital
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: entryId
+          description: pass the id of the particular entry in the employee list
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: value of the employee list entries
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeListEntry"
+              examples:
+                response:
+                  $ref: "#/components/examples/EmployeeListEntryExample"
+        "404":
+          description: Hospital or Entry with such ID does not exists
+    put:
+      tags:
+        - hospitalEmployeeList
+      summary: Updates specific entry
+      operationId: updateEmployeeListEntry
+      description: Use this method to update content of the employee list entry.
+      parameters:
+        - in: path
+          name: hospitalId
+          description: pass the id of the particular hospital
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: entryId
+          description: pass the id of the particular entry in the employee list
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeListEntry"
+            examples:
+              request:
+                $ref: "#/components/examples/EmployeeListEntryExample"
+        description: Waiting list entry to update
+        required: true
+      responses:
+        "200":
+          description: >-
+            value of the employee list entry with re-computed estimated time of
+            hospital entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmployeeListEntry"
+              examples:
+                response:
+                  $ref: "#/components/examples/EmployeeListEntryExample"
+        "403":
+          description: >-
+            Value of the entryID and the data id is mismatching. Details are
+            provided in the response body.
+        "404":
+          description: Hospital or Entry with such ID does not exists
+    delete:
+      tags:
+        - hospitalEmployeeList
+      summary: Deletes specific entry
+      operationId: deleteEmployeeListEntry
+      description: Use this method to delete the specific entry from the employee list.
+      parameters:
+        - in: path
+          name: hospitalId
+          description: pass the id of the particular hospital
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: entryId
+          description: pass the id of the particular entry in the employee list
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Item deleted
+        "404":
+          description: Hospital or Entry with such ID does not exists
+  "/employee-list/{hospitalId}/role":
+    get:
+      tags:
+        - hospitalRoles
+      summary: Provides the list of roles associated with hospital
+      operationId: getRoles
+      description: By using hospitalId you get list of predefined roles
+      parameters:
+        - in: path
+          name: hospitalId
+          description: pass the id of the particular hospital
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: value of the predefined roles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Role"
+              examples:
+                response:
+                  $ref: "#/components/examples/RolesListExample"
+        "404":
+          description: Hospital with such ID does not exists
+  "/hospital":
+    get:
+      tags:
+        - hospitals
+      summary: Provides the hospital list
+      operationId: getHospital
+      responses:
+        "200":
+          description: hospital list entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Hospital"
+              examples:
+                response:
+                  $ref: "#/components/examples/HospitalListEntriesExample"
+        "404":
+          description: Hospital with such ID does not exist
+    post:
+      tags:
+        - hospitals
+      summary: Saves new hospital definition
+      operationId: createHospital
+      description: Use this method to initialize new hospital in the system
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Hospital"
+            examples:
+              request-sample:
+                $ref: "#/components/examples/HospitalExample"
+        description: Hospital details to store
+        required: true
+      responses:
+        "200":
+          description: >-
+            Value of stored hospital
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hospital"
+              examples:
+                updated-response:
+                  $ref: "#/components/examples/HospitalExample"
+        "400":
+          description: Missing mandatory properties of input object.
+        "409":
+          description: Entry with the specified id already exists
+  "/hospital/{hospitalId}":
+    delete:
+      tags:
+        - hospitals
+      summary: Deletes specific hospital
+      operationId: deleteHospital
+      description: Use this method to delete the specific hospital from the system.
+      parameters:
+        - in: path
+          name: hospitalId
+          description: pass the id of the particular hospital
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Item deleted
+        "404":
+          description: Hospital with such ID does not exist
+components:
+  schemas:
+    EmployeeListEntry:
+      type: object
+      required: [ id ]
+      properties:
+        id:
+          type: string
+          example: x321ab3
+          description: Unique id of the entry in this employee list
+        name:
+          type: string
+          example: Jožko Púčik
+          description: Name of employee in employee list
+        role:
+          $ref: "#/components/schemas/Role"
+        performance:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 10
+          example: 8
+          description: Performance rating of employee (0-10)
+        performances:
+          type: array
+          items:
+            $ref: "#/components/schemas/PerformanceEntry"
+          description: List of performance entries for this employee
+      example:
+        $ref: "#/components/examples/EmployeeListEntryExample"
+    PerformanceEntry:
+      type: object
+      required: [ id, activityType, patientName, activityDate, details ]
+      properties:
+        id:
+          type: string
+          example: perf123
+          description: Unique id of the performance entry
+        activityType:
+          type: string
+          example: examination
+          description: Type of activity (examination, surgery, preoperative consultation, checkup)
+        patientName:
+          type: string
+          example: John Doe
+          description: Name of the patient
+        activityDate:
+          type: string
+          example: 01/05/23
+          description: Date of the activity in DD/MM/YY format
+        details:
+          type: string
+          example: Routine checkup with blood pressure measurement
+          description: Details of the operation (up to 255 characters)
+    Role:
+      description: "Describes employee position in hospital"
+      required:
+        - value
+      properties:
+        value:
+          type: string
+          example: Doctor
+        code:
+          type: string
+          example: subfebrilia
+      example:
+        $ref: "#/components/examples/RoleExample"
+    Hospital:
+      type: object
+      required: [ "id", "name" ]
+      properties:
+        id:
+          type: string
+          example: nemocnica-ba
+          description: Unique identifier of the hospital
+        name:
+          type: string
+          example: Dentist hospital
+          description: Human readable display name of the hospital
+#        roomNumber:
+        address:
+          type: string
+          example: Ulica u nas doma 69
+        employeeList:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmployeeListEntry'
+        predefinedRoles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+      example:
+        $ref: "#/components/examples/HospitalExample"
+  examples:
+    RolesListExample:
+      summary: Sample of GP hospital roles
+      description: |
+        Example list of possible
+      value:
+        - value: Doctor
+          code: subfebrilia
+        - value: Nurse
+          code: nausea
+        - value: Director
+          code: followup
+        - value: Administration
+          code: administration
+        - value: Economist
+          code: blood-test
+    EmployeeListEntryExample:
+      summary: Ľudomír Zlostný employee
+      description: |
+        Entry represents a employee working in the hospital
+      value:
+        id: x321ab3
+        name: Ľudomír Zlostný
+        role:
+          value: Nurse
+          code: nausea
+        performance: 8
+        performances:
+          - id: perf123
+            activityType: examination
+            patientName: John Doe
+            activityDate: 01/05/23
+            details: Routine checkup with blood pressure measurement
+    RoleExample:
+      summary: Roles
+      description: list of few roles that can be chosen to employee
+      value:
+        valuee: Doctor
+        code: subfebrilia
+    HospitalListEntriesExample:
+      summary: List of hospitals
+      description: Example hospital list containing 2 hospitals
+      value:
+        - id: x321ab3
+          name: Hopistal BA
+        - id: x321ab4
+          name: Hospital NR
+    EmployeeListEntriesExample:
+      summary: List of employees
+      description: |
+        Example employee list containing 2 employee
+      value:
+        - id: x321ab3
+          name: Jožko Púčik
+          role:
+            value: Doctor
+            code: subfebrilia
+          performance: 9
+          performances:
+            - id: perf123
+              activityType: surgery
+              patientName: Jane Smith
+              activityDate: 15/04/23
+              details: Appendectomy performed successfully
+            - id: perf124
+              activityType: checkup
+              patientName: Tom Brown
+              activityDate: 20/04/23
+              details: Post-surgery follow-up
+        - id: x321ab4
+          name: Ferdinand Trety
+          role:
+            value: Nurse
+            code: nausea
+          performance: 7
+          performances:
+            - id: perf125
+              activityType: preoperative consultation
+              patientName: Alice Johnson
+              activityDate: 10/05/23
+              details: Patient prepared for upcoming surgery
+    HospitalExample:
+      summary: Sample hospital
+      description: |
+        Example of hospital with employee list and roles
+      value:
+        id: hospital-ha
+        name: Hospital in BA
+        address: Ulica u nas doma69
+        employeeList:
+          - id: x321ab3
+            name: Jožko Púčik
+            role:
+              value: Doctor
+              code: subfebrilia
+          - id: x321ab4
+            name: Ferdinand Trety
+            condition:
+              value: Nurse
+              code: nausea
+        predefinedRoles:
+          - value: Doctor
+            code: subfebrilia
+          - value: Nurse
+            code: nausea
+          - value: Director
+            code: followup
+          - value: Administration
+            code: administration
+          - value: Economist
+            code: blood-test
+            

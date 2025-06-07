@@ -1,0 +1,4 @@
+*.exe
+*.exe~
+./hospital-api-service
+.DS_Store
