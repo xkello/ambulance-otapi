@@ -1,4 +1,4 @@
-module github.com/Serbel97/ambulance-api
+module github.com/xkello/ambulance-api
 
 go 1.24.0
 

@@ -3,7 +3,7 @@ package hospital_wl
 import (
 	"net/http"
 
-	"github.com/Serbel97/ambulance-api/internal/db_service"
+	"github.com/xkello/ambulance-api/internal/db_service"
 	"github.com/gin-gonic/gin"
 )
 

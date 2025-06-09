@@ -60,7 +60,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5.7.0
         with:
-          images: sempresionus/hospital-wl-api
+          images: xkello/hospital-wl-api
           tags: |
             type=schedule
             type=ref,event=branch

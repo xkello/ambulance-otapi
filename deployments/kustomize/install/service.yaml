@@ -1,10 +1,10 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: x-hospital-api
+  name: ot-hospital-api
 spec:
   selector:
-    pod: x-hospital-api-label
+    pod: ot-hospital-api-label
   ports:
     - name: http
       protocol: TCP

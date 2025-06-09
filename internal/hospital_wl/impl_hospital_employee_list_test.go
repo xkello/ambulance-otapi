@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/Serbel97/ambulance-api/internal/db_service"
+	"github.com/xkello/ambulance-api/internal/db_service"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/mock"
 )

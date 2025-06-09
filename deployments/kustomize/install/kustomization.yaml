@@ -6,12 +6,12 @@ resources:
   - service.yaml
 
 configMapGenerator:
-  - name: x-hospital-api-mongodb-init
+  - name: ot-hospital-api-mongodb-init
     files:
       - params/init-db.js
-  - name: x-hospital-api-config
+  - name: ot-hospital-api-config
     literals:
-      - database=x-hospital
+      - database=ot-hospital
       - collection=hospital
 patches:
   - path: patches/webapi.deployment.yaml
@@ -19,4 +19,4 @@ patches:
       group: apps
       version: v1
       kind: Deployment
-      name: x-hospital-api
+      name: ot-hospital-api
