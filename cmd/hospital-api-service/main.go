@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/xkello/ambulance-api/api"
-	"github.com/xkello/ambulance-api/internal/hospital_wl"
-	"github.com/xkello/ambulance-api/internal/db_service"
+	"github.com/xkello/ambulance-otapi/api"
+	"github.com/xkello/ambulance-otapi/internal/hospital_wl"
+	"github.com/xkello/ambulance-otapi/internal/db_service"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"

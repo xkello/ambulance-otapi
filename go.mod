@@ -1,4 +1,4 @@
-module github.com/xkello/ambulance-api
+module github.com/xkello/ambulance-otapi
 
 go 1.24.0
 
